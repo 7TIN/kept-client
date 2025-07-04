@@ -78,12 +78,12 @@ export function ShareExperienceDialog() {
   async function onSubmit(values: ExperienceFormValues) {
   const payload = {
     ...values,
-    companyId: 7, // or get from state/props
+    companyId: 7, 
     interviewDate: values.interviewDate.toISOString().split("T")[0], // "yyyy-MM-dd"
     questions: values.questions.map((q) => ({
       question: q.questionText,
       type: q.questionType,
-      section: q.questionType, // same as type if you don’t split it
+      section: q.questionType, 
     })),
   };
 
@@ -110,7 +110,7 @@ export function ShareExperienceDialog() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              {/* --- Title --- */}
+
               <FormField
                 control={form.control}
                 name="title"
@@ -127,7 +127,7 @@ export function ShareExperienceDialog() {
                   </FormItem>
                 )}
               />
-              {/* --- Position --- */}
+
               <FormField
                 control={form.control}
                 name="position"
@@ -141,7 +141,7 @@ export function ShareExperienceDialog() {
                   </FormItem>
                 )}
               />
-              {/* --- Experience Type --- */}
+
               <FormField
                 control={form.control}
                 name="experienceType"
@@ -204,7 +204,6 @@ export function ShareExperienceDialog() {
                   </FormItem>
                 )}
               />
-              {/* --- Summary --- */}
               <FormField
                 control={form.control}
                 name="summary"
@@ -221,7 +220,6 @@ export function ShareExperienceDialog() {
                   </FormItem>
                 )}
               />
-              {/* --- Questions Section --- */}
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Questions</h3>
@@ -232,7 +230,6 @@ export function ShareExperienceDialog() {
                       key={item.id}
                       className="grid grid-cols-[1fr_auto_auto] sm:grid-cols-[1fr_160px_32px] items-center gap-2"
                     >
-                      {/* Question Text */}
                       <FormField
                         control={form.control}
                         name={`questions.${index}.questionText`}
@@ -250,7 +247,6 @@ export function ShareExperienceDialog() {
                         )}
                       />
 
-                      {/* Question Type */}
                       <FormField
                         control={form.control}
                         name={`questions.${index}.questionType`}
@@ -279,7 +275,6 @@ export function ShareExperienceDialog() {
                         )}
                       />
 
-                      {/* Delete Icon Button */}
                       <Button
                         type="button"
                         variant="ghost"
@@ -303,7 +298,7 @@ export function ShareExperienceDialog() {
                   + Add Question
                 </Button>
               </div>
-              {/* --- Submit Button --- */}
+
               <Button type="submit">Submit Experience</Button>
             </form>
           </Form>

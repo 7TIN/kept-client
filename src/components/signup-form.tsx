@@ -53,8 +53,7 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
           password: form.password,
         }
       );
-      setSuccess(true);       // show success banner or redirect
-      // e.g. navigate("/login") if using react‑router
+      setSuccess(true);       
     } catch (err: any) {
       setErrorMsg(
         err.response?.data?.message || "Registration failed. Try again."
@@ -62,7 +61,6 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
     }
   };
 
-  /* ---------------- render ---------------- */
   return (
     <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
       <Card>
