@@ -25,11 +25,11 @@ export function Navbar() {
         </nav>
 
         {/* Right Side - Action Button */}
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <Link to="/share">
             <Button size="sm">Share Experience</Button>
           </Link>
-        </div>
+        </div> */}
       </div>
     </header>
   );
