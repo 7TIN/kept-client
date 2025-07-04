@@ -19,7 +19,7 @@ export function Navbar() {
           <Link to="/companies" className="hover:text-foreground transition-colors">
             Companies
           </Link>
-          <Link to="/experiences" className="hover:text-foreground transition-colors">
+          <Link to="/experience" className="hover:text-foreground transition-colors">
             Experiences
           </Link>
         </nav>

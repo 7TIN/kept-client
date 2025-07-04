@@ -1,73 +1,97 @@
-import { createContext, useContext, useEffect, useState } from "react"
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  type ReactNode,
+} from "react"
 
 type Theme = "dark" | "light" | "system"
 
 type ThemeProviderProps = {
-  children: React.ReactNode
+  children: ReactNode
   defaultTheme?: Theme
   storageKey?: string
 }
 
 type ThemeProviderState = {
   theme: Theme
-  setTheme: (theme: Theme) => void
+  setTheme: (t: Theme) => void
 }
 
-const initialState: ThemeProviderState = {
-  theme: "system",
-  setTheme: () => null,
-}
+const ThemeContext = createContext<ThemeProviderState | undefined>(undefined)
 
-const ThemeProviderContext = createContext<ThemeProviderState>(initialState)
-
+/* ---------------------------------------------------------- */
+/*  Provider                                                  */
+/* ---------------------------------------------------------- */
 export function ThemeProvider({
   children,
   defaultTheme = "system",
   storageKey = "vite-ui-theme",
-  ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(
-    () => (localStorage.getItem(storageKey) as Theme) || defaultTheme
-  )
+  const [theme, setThemeState] = useState<Theme>(() => {
+    const stored = localStorage.getItem(storageKey) as Theme | null
+    return stored ?? defaultTheme
+  })
 
-  useEffect(() => {
-    const root = window.document.documentElement
+  /* ---------- core apply function ---------- */
+  function applyTheme(target: Theme) {
+    const root = document.documentElement
+    root.classList.remove("light", "dark", "dark-pattern")
 
-    root.classList.remove("light", "dark")
+    const resolved =
+      target === "system"
+        ? window.matchMedia("(prefers-color-scheme: dark)").matches
+          ? "dark"
+          : "light"
+        : target
 
-    if (theme === "system") {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
-        .matches
-        ? "dark"
-        : "light"
-
-      root.classList.add(systemTheme)
-      return
-    }
-
-    root.classList.add(theme)
-  }, [theme])
-
-  const value = {
-    theme,
-    setTheme: (theme: Theme) => {
-      localStorage.setItem(storageKey, theme)
-      setTheme(theme)
-    },
+    root.classList.add(resolved)
+    // add background pattern class only in dark mode
+    if (resolved === "dark") root.classList.add("dark-pattern")
   }
 
+  /* ---------- side‑effects ---------- */
+  useEffect(() => {
+    applyTheme(theme)
+    localStorage.setItem(storageKey, theme)
+  }, [theme, storageKey])
+
+  /* sync across tabs */
+  useEffect(() => {
+    const handler = (e: StorageEvent) => {
+      if (e.key === storageKey && e.newValue) {
+        setThemeState(e.newValue as Theme)
+      }
+    }
+    window.addEventListener("storage", handler)
+    return () => window.removeEventListener("storage", handler)
+  }, [storageKey])
+
+  /* react to system changes when theme === "system" */
+  useEffect(() => {
+    if (theme !== "system") return
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    const cb = () => applyTheme("system")
+    mq.addEventListener("change", cb)
+    return () => mq.removeEventListener("change", cb)
+  }, [theme])
+
+  /* ---------- exposed setter ---------- */
+  const setTheme = (t: Theme) => setThemeState(t)
+
   return (
-    <ThemeProviderContext.Provider {...props} value={value}>
+    <ThemeContext.Provider value={{ theme, setTheme }}>
       {children}
-    </ThemeProviderContext.Provider>
+    </ThemeContext.Provider>
   )
 }
 
-export const useTheme = () => {
-  const context = useContext(ThemeProviderContext)
-
-  if (context === undefined)
-    throw new Error("useTheme must be used within a ThemeProvider")
-
-  return context
+/* ---------------------------------------------------------- */
+/*  Hook                                                      */
+/* ---------------------------------------------------------- */
+export function useTheme() {
+  const ctx = useContext(ThemeContext)
+  if (!ctx) throw new Error("useTheme must be used within ThemeProvider")
+  return ctx
 }

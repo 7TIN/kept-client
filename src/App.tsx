@@ -1,36 +1,57 @@
-// import { useEffect, useState } from 'react'
-// import { LoginForm } from './components/login-form'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-// import { LoginForm } from "@/components/login-form"
-
-import { Navbar } from "./components/layout/Navbar"
-import { ThemeProvider } from "./components/theme-provider"
-import ExperiencesPage from "./pages/ExperiencesPage"
-import Login from "./pages/login"
-import Signup from "./pages/signup"
-import { BrowserRouter, Route, Routes } from "react-router-dom"
+import { ThemeProvider } from "./components/theme-provider";
 
 
-function App() {
+// Pages
+import HomePage from "./pages/HomePage";
+import ExperiencesPage from "./pages/ExperiencesPage";
+import Login from "./pages/login";
+import Signup from "./pages/signup";
+import AuthLayout from "./components/layout/AuthLayout";
+import AppLayout from "./components/layout/AppLayout";
 
+export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-        {/* Navigation bar visible on all pages */}
-        <Navbar />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
 
-        {/* App routes */}
         <Routes>
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/experience" element={<ExperiencesPage />} />
-          {/* Optional default/home route */}
-          <Route path="/" element={<Login />} />
-        </Routes>
-      </ThemeProvider>
-    </BrowserRouter>
-    
-  )
-}
+          {/* ───── Auth Routes (no navbar, no background) ───── */}
+          <Route
+            path="/login"
+            element={
+              <AuthLayout>
+                <Login />
+              </AuthLayout>
+            }
+          />
+          <Route
+            path="/signup"
+            element={
+              <AuthLayout>
+                <Signup />
+              </AuthLayout>
+            }
+          />
 
-export default App
+          {/* ───── Main App Routes (with navbar and background) ───── */}
+          <Route
+            path="/"
+            element={
+              <AppLayout>
+                <HomePage />
+              </AppLayout>
+            }
+          />
+          <Route
+            path="/experience"
+            element={
+              <AppLayout>
+                <ExperiencesPage />
+              </AppLayout>
+            }
+          />
+        </Routes>
+    </ThemeProvider>
+  );
+}
