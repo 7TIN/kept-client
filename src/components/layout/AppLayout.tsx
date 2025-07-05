@@ -1,4 +1,5 @@
 import React from "react";
+import { Navbar } from "./Navbar";
 
 type Props = {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ export default function AppLayout({ children }: Props) {
       backgroundPosition: "0 0, 10px 10px, 15px 5px",
     }}
   />
-
+  <Navbar />
   <div className="relative z-10">{children}</div>
 </div>
 // <div className="relative z-10">{children}</div>

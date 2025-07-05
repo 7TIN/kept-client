@@ -10,6 +10,7 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import AuthLayout from "./components/layout/AuthLayout";
 import AppLayout from "./components/layout/AppLayout";
+import CompaniesPage from "./components/company/CompanySortBar";
 
 export default function App() {
   return (
@@ -34,6 +35,15 @@ export default function App() {
             }
           />
 
+
+          <Route
+            path="/companies"
+            element={
+              <AppLayout>
+                <CompaniesPage />
+              </AppLayout>
+            }
+          />
           {/* ───── Main App Routes (with navbar and background) ───── */}
           <Route
             path="/"
