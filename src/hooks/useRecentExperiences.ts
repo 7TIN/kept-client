@@ -12,11 +12,12 @@ export interface PageData {
   totalPages: number;
 }
 
-interface Filters {
+export interface Filters {
   search?: string;
   position?: string;
   type?: string;
 }
+
 
 // export function useRecentExperiences(page: number, size = 5, filters: Filters = {}) {
 //   const [data, setData] = useState<PageData | null>(null);
@@ -46,6 +47,7 @@ export function useRecentExperiences(page: number, size = 5, filters: Filters = 
   const [data, setData] = useState<PageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
 
 
 useEffect(() => {

@@ -1,46 +1,52 @@
 // src/components/experience/ExperienceFeed.tsx
 import { useState } from "react";
-import { useRecentExperiences } from "@/hooks/useRecentExperiences";
-import { ExperienceCard } from "./ExperienceCard";
+import { ExperienceCard } from "@/components/experience/ExperienceCard";
+import {
+  useExperienceFeed,
+  type Filters,               // ← exported from hook
+} from "@/hooks/useExperienceFeed";
 
 interface Props {
-  filters: {
-    search?: string;
-    position?: string;
-    type?: string;
-  };
+  filters: Filters;
 }
 
-export function ExperienceFeed({ filters }: Props) {
+export default function ExperienceFeed({ filters }: Props) {
   const [page, setPage] = useState(0);
-  const { data, loading, error } = useRecentExperiences(page, 5, filters);
+  const pageSize = 5;
 
-  if (loading) return <p>Loading...</p>;
-  if (error || !data) return <p>Error loading experiences.</p>;
-  if (data.content.length === 0) return <p>No experiences found.</p>;
+  const { data, loading, error } = useExperienceFeed(page, pageSize, filters);
+
+  if (loading) return <p>Loading…</p>;
+  if (error)   return <p className="text-red-500">{error}</p>;
+  if (!data || data.content.length === 0)
+    return <p>No experiences found.</p>;
 
   return (
-    <div className="space-y-6">
-      {data.content.map((exp:any) => (
+    <section className="space-y-6">
+      {data.content.map((exp) => (
         <ExperienceCard key={exp.id} experience={exp} />
       ))}
 
-      <div className="flex justify-between pt-4">
+      {/* Pagination */}
+      <div className="flex justify-center gap-3 pt-4">
         <button
           disabled={page === 0}
-          onClick={() => setPage((p) => Math.max(p - 1, 0))}
-          className="text-sm px-3 py-1 border rounded disabled:opacity-50"
+          onClick={() => setPage((p) => p - 1)}
+          className="px-2 py-1 rounded disabled:opacity-50"
         >
-          Previous
+          ← Prev
         </button>
+        <span>
+          Page {data.number + 1} / {data.totalPages}
+        </span>
         <button
           disabled={page + 1 >= data.totalPages}
           onClick={() => setPage((p) => p + 1)}
-          className="text-sm px-3 py-1 border rounded disabled:opacity-50"
+          className="px-2 py-1 rounded disabled:opacity-50"
         >
-          Next
+          Next →
         </button>
       </div>
-    </div>
+    </section>
   );
 }

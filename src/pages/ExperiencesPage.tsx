@@ -1,7 +1,8 @@
 // src/pages/experiences/ExperiencePage.tsx
 import { useState } from "react";
-import {ExperienceFeed} from "@/components/experience/ExperienceFeed";
+// import {ExperienceFeed} from "@/components/experience/ExperienceFeed";
 import { ShareExperienceDialog } from "@/components/experience/ShareExperienceDialog";
+import ExperienceFeed from "@/components/experience/ExperienceFeed";
 
 export default function ExperiencesPage() {
   const [search, setSearch] = useState("");
