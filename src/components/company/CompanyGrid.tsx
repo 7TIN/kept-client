@@ -47,7 +47,9 @@ export function CompanyList() {
             key={c.id}
             name={c.name}
             experienceCount={c.experienceCount}
-            onClick={() => navigate(`/companies/${c.id}`)}
+            onClick={() =>
+              navigate(`/experience?company=${encodeURIComponent(c.name)}`)
+            }
           />
         ))}
       </div>

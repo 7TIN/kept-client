@@ -12,6 +12,7 @@ export interface Filters {
   search?: string;
   position?: string;
   type?: string;
+  company?: string;
 }
 
 export function useExperienceFeed(
@@ -19,7 +20,8 @@ export function useExperienceFeed(
   size = 5,
   rawFilters?: Filters
 ) {
-  const filters = useMemo(() => rawFilters ?? {}, [JSON.stringify(rawFilters ?? {})]);
+  // const filters = useMemo(() => rawFilters ?? {}, [JSON.stringify(rawFilters ?? {})]);
+  const filters = useMemo(() => rawFilters, [JSON.stringify(rawFilters)]);
 
   const [data, setData] = useState<PageData | null>(null);
   const [loading, setLoading] = useState(true);

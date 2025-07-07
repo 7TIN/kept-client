@@ -74,7 +74,7 @@ export function ExperienceCard({ experience }: Props) {
       </DialogTrigger>
 
       {/* ---------- DIALOG ---------- */}
-      <DialogContent className="max-w-xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-w-xl max-h-[80vh] overflow-y-auto scrollbar-hidden">
         <DialogHeader>
           <DialogTitle>{experience.title}</DialogTitle>
           <p className="text-sm text-muted-foreground">

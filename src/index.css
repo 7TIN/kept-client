@@ -119,10 +119,32 @@
   }
 }
 
+/* Hide all scrollbars globally */
+body::-webkit-scrollbar,
+html::-webkit-scrollbar {
+  display: none;
+}
+body,
+html {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;     /* Firefox */
+}
+
+
 no-scrollbar {
   scrollbar-width: none;      /* Firefox */
   -ms-overflow-style: none;   /* IE 10+  */
 }
 .no-scrollbar::-webkit-scrollbar {
   display: none;              /* Safari & Chrome */
+}
+
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-hidden {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
 }

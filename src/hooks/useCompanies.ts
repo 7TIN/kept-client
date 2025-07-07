@@ -1,7 +1,7 @@
 
 import { useEffect, useState } from "react";
 import api from "@/lib/api";
-import type { Company } from "@/lib/company";
+import type { Company } from "@/lib/Company";
 
 export function useCompanies() {
   const [companies, setCompanies] = useState<Company[]>([]);

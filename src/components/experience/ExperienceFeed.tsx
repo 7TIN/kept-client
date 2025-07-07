@@ -1,5 +1,5 @@
 // src/components/experience/ExperienceFeed.tsx
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExperienceCard } from "@/components/experience/ExperienceCard";
 import {
   useExperienceFeed,
@@ -13,6 +13,8 @@ interface Props {
 export default function ExperienceFeed({ filters }: Props) {
   const [page, setPage] = useState(0);
   const pageSize = 5;
+  
+  useEffect(() => setPage(0), [JSON.stringify(filters)]);
 
   const { data, loading, error } = useExperienceFeed(page, pageSize, filters);
 
