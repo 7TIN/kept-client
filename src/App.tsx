@@ -10,7 +10,8 @@ import Login from "./pages/login";
 import Signup from "./pages/signup";
 import AuthLayout from "./components/layout/AuthLayout";
 import AppLayout from "./components/layout/AppLayout";
-import CompaniesPage from "./components/company/CompanySortBar";
+import CompaniesPage from "./pages/CompaniesPage";
+// import CompaniesPage from "./components/company/CompanySortBar";
 
 export default function App() {
   return (

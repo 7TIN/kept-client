@@ -29,7 +29,6 @@ export default function ExperienceFeed({ filters }: Props) {
         <ExperienceCard key={exp.id} experience={exp} />
       ))}
 
-      {/* Pagination */}
       <div className="flex justify-center gap-3 pt-4">
         <button
           disabled={page === 0}

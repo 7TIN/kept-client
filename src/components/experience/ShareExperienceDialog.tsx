@@ -398,7 +398,6 @@ export function ShareExperienceDialog() {
                 </Button>
               </div>
 
-              {/* ───── Submit Centered ───── */}
               <div className="flex justify-center">
                 <Button type="submit" className="w-40">
                   Submit Experience
