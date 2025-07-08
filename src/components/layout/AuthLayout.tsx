@@ -1,13 +1,10 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
-type Props = {
-  children: React.ReactNode;
-};
-
-export default function AuthLayout({ children }: Props) {
+export default function AuthLayout() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
-      {children}
+      <Outlet />
     </div>
   );
 }

@@ -9,7 +9,7 @@ export interface PageData {
 }
 
 export interface Filters {
-  search?: string;
+  q?: string;
   position?: string;
   type?: string;
   company?: string;

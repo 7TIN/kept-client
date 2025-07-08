@@ -2,7 +2,6 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import { ThemeProvider } from "./components/theme-provider";
 
-
 // Pages
 import HomePage from "./pages/HomePage";
 import ExperiencesPage from "./pages/ExperiencesPage";
@@ -16,53 +15,17 @@ import CompaniesPage from "./pages/CompaniesPage";
 export default function App() {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-
-        <Routes>
-          {/* ───── Auth Routes (no navbar, no background) ───── */}
-          <Route
-            path="/login"
-            element={
-              <AuthLayout>
-                <Login />
-              </AuthLayout>
-            }
-          />
-          <Route
-            path="/signup"
-            element={
-              <AuthLayout>
-                <Signup />
-              </AuthLayout>
-            }
-          />
-
-
-          <Route
-            path="/companies"
-            element={
-              <AppLayout>
-                <CompaniesPage />
-              </AppLayout>
-            }
-          />
-          {/* ───── Main App Routes (with navbar and background) ───── */}
-          <Route
-            path="/"
-            element={
-              <AppLayout>
-                <HomePage />
-              </AppLayout>
-            }
-          />
-          <Route
-            path="/experience"
-            element={
-              <AppLayout>
-                <ExperiencesPage />
-              </AppLayout>
-            }
-          />
-        </Routes>
+      <Routes>
+        <Route element={<AppLayout />}>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/companies" element={<CompaniesPage />} />
+          <Route path="/experience" element={<ExperiencesPage />} />
+        </Route>
+        <Route element={<AuthLayout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+        </Route>
+      </Routes>
     </ThemeProvider>
   );
 }

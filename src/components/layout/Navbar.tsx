@@ -1,6 +1,32 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTheme } from "@/components/theme-provider";
+
+function ThemeSwitchButton() {
+  const { theme, setTheme } = useTheme();
+
+  // Cycles: dark -> light -> system -> dark ...
+  function nextTheme() {
+    setTheme(
+      theme === "dark" ? "light" : theme === "light" ? "system" : "dark"
+    );
+  }
+
+  return (
+    <button
+      onClick={nextTheme}
+      className="px-2 py-1 rounded border bg-gray-100 dark:bg-gray-900"
+      title="Switch Theme"
+      aria-label="Switch Theme"
+      style={{ minWidth: 40 }}
+    >
+      {theme === "dark" && "🌙"}
+      {theme === "light" && "☀️"}
+      {theme === "system" && "💻"}
+    </button>
+  );
+}
 
 export function Navbar() {
   return (
@@ -24,12 +50,13 @@ export function Navbar() {
           </Link>
         </nav>
 
-        {/* Right Side - Action Button */}
-        {/* <div className="flex items-center gap-4">
-          <Link to="/share">
+        {/* Right Side - Theme Switch Button */}
+        <div className="flex items-center gap-4">
+          <ThemeSwitchButton />
+          {/* <Link to="/share">
             <Button size="sm">Share Experience</Button>
-          </Link>
-        </div> */}
+          </Link> */}
+        </div>
       </div>
     </header>
   );

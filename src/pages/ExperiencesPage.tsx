@@ -77,7 +77,7 @@ export default function ExperiencesPage() {
       </div>
 
       {/* Only update ExperienceFeed when debouncedSearch changes */}
-      <ExperienceFeed filters={{ search: debouncedSearch, position, type, company: companyName }} />
+      <ExperienceFeed filters={{ q: debouncedSearch, position, type, company: companyName }} />
     </div>
   );
 }
