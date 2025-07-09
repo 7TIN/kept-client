@@ -3,35 +3,72 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
-function ThemeSwitchButton() {
+export function ThemeSwitchButton() {
   const { theme, setTheme } = useTheme();
 
-  // Cycles: dark -> light -> system -> dark ...
+  // const [systemTheme, setSystemTheme] = useState<"dark" | "light">(
+  //   window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+  // );
+
+  // useEffect(() => {
+  //   if (theme !== "system") return;
+  //   const mq = window.matchMedia("(prefers-color-scheme: dark)");
+  //   const update = () =>
+  //     setSystemTheme(mq.matches ? "dark" : "light");
+  //   mq.addEventListener("change", update);
+  //   return () => mq.removeEventListener("change", update);
+  // }, [theme]);
+
   function nextTheme() {
-    setTheme(
-      theme === "dark" ? "light" : theme === "light" ? "system" : "dark"
-    );
+    setTheme(theme === "dark" ? "light" : "dark");
   }
+
+  const isDark = theme === "dark";
+  const icon = isDark ? "🌙" : "☀️";
+  const label = isDark ? "Switch to light mode" : "Switch to dark mode";
 
   return (
     <button
       onClick={nextTheme}
-      className="px-2 py-1 rounded border bg-gray-100 dark:bg-gray-900"
-      title="Switch Theme"
-      aria-label="Switch Theme"
-      style={{ minWidth: 40 }}
+      // className={`
+      //   flex items-center justify-center
+      //   w-14 h-14 rounded-xl
+      //   border border-black/10 dark:border-white/10
+      //   bg-white/40 dark:bg-black/30
+      //   backdrop-blur-sm
+      //   transition
+      //   shadow
+      //   focus:outline-none focus:ring-2 focus:ring-primary
+      // `}
+      className={`
+        flex items-center justify-center w-8 h-8
+        rounded-xl
+        backdrop-blur-sm
+        transition
+        shadow
+      `}
+      title={label}
+      aria-label={label}
+      style={{
+        // Remove any default background for full transparency effect
+        backgroundClip: "padding-box",
+      }}
     >
-      {theme === "dark" && "🌙"}
-      {theme === "light" && "☀️"}
-      {theme === "system" && "💻"}
+      <span className="text-1xl">{icon}</span>
     </button>
   );
 }
 
 export function Navbar() {
   return (
-    <header className={cn("border-b sticky top-0 z-50 bg-background")}>
-      <div className="container mx-auto flex items-center justify-between h-16 px-4 sm:px-6 lg:px-8">
+    <nav className="w-full flex justify-center mt-4 pointer-events-none">
+      <header
+        className={cn(
+          "w-full max-w-4xl mx-auto rounded-xl border border-white/10 dark:border-white/10 " +
+          "bg-white/30 dark:bg-black/10 backdrop-blur-lg shadow-lg " +
+          "flex items-center justify-between h-16 px-6 pointer-events-auto"
+        )}
+      >
         {/* Logo / App Name */}
         <Link to="/" className="text-lg font-bold tracking-tight">
           Kept
@@ -57,7 +94,7 @@ export function Navbar() {
             <Button size="sm">Share Experience</Button>
           </Link> */}
         </div>
-      </div>
-    </header>
+      </header>
+    </nav>
   );
 }

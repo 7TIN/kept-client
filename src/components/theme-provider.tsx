@@ -21,9 +21,50 @@ type ThemeProviderState = {
 
 const ThemeContext = createContext<ThemeProviderState | undefined>(undefined)
 
-/* ---------------------------------------------------------- */
-/*  Provider                                                  */
-/* ---------------------------------------------------------- */
+function GlobalBackground({ theme }: { theme: Theme }) {
+  // Resolve system theme on the client
+  let resolvedTheme = theme;
+  if (theme === "system") {
+    resolvedTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+  }
+
+  if (resolvedTheme === "dark") {
+    return (
+      <div
+        className="fixed inset-0 -z-10 pointer-events-none"
+        style={{
+          background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(244, 114, 182, 0.25), transparent 70%), #000000",
+        }}
+        aria-hidden
+      />
+    );
+  }
+  return (
+    // <div
+    //   className="fixed inset-0 -z-10 pointer-events-none"
+    //   style={{
+    //     backgroundImage: "radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #10b981 100%)",
+    //     backgroundSize: "100% 100%",
+    //     backgroundColor: "#fff",
+    //   }}
+    //   aria-hidden
+    // />
+
+    <div
+  className="fixed inset-0 -z-10 pointer-events-none"
+  style={{
+    backgroundImage: `
+      radial-gradient(circle at 20% 80%, rgba(255, 182, 153, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(255, 244, 214, 0.5) 0%, transparent 50%),
+      radial-gradient(circle at 40% 40%, rgba(255, 182, 153, 0.1) 0%, transparent 50%)
+    `,
+    backgroundColor: "#fff8f0",
+  }}
+  aria-hidden
+/>
+  );
+}
+
 export function ThemeProvider({
   children,
   defaultTheme = "system",
@@ -34,30 +75,24 @@ export function ThemeProvider({
     return stored ?? defaultTheme
   })
 
-  /* ---------- core apply function ---------- */
   function applyTheme(target: Theme) {
     const root = document.documentElement
     root.classList.remove("light", "dark", "dark-pattern")
-
     const resolved =
       target === "system"
         ? window.matchMedia("(prefers-color-scheme: dark)").matches
           ? "dark"
           : "light"
         : target
-
     root.classList.add(resolved)
-    // add background pattern class only in dark mode
     if (resolved === "dark") root.classList.add("dark-pattern")
   }
 
-  /* ---------- side‑effects ---------- */
   useEffect(() => {
     applyTheme(theme)
     localStorage.setItem(storageKey, theme)
   }, [theme, storageKey])
 
-  /* sync across tabs */
   useEffect(() => {
     const handler = (e: StorageEvent) => {
       if (e.key === storageKey && e.newValue) {
@@ -68,7 +103,6 @@ export function ThemeProvider({
     return () => window.removeEventListener("storage", handler)
   }, [storageKey])
 
-  /* react to system changes when theme === "system" */
   useEffect(() => {
     if (theme !== "system") return
     const mq = window.matchMedia("(prefers-color-scheme: dark)")
@@ -77,19 +111,16 @@ export function ThemeProvider({
     return () => mq.removeEventListener("change", cb)
   }, [theme])
 
-  /* ---------- exposed setter ---------- */
   const setTheme = (t: Theme) => setThemeState(t)
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>
+      <GlobalBackground theme={theme} />
       {children}
     </ThemeContext.Provider>
   )
 }
 
-/* ---------------------------------------------------------- */
-/*  Hook                                                      */
-/* ---------------------------------------------------------- */
 export function useTheme() {
   const ctx = useContext(ThemeContext)
   if (!ctx) throw new Error("useTheme must be used within ThemeProvider")
