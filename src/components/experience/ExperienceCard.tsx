@@ -15,6 +15,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { GenerateAnswerButton } from "../GenerateAnswerButton";
 
 type Question = {
   question: string;
@@ -94,8 +95,10 @@ export function ExperienceCard({ experience }: Props) {
               >
                 <p className="font-medium">{q.question}</p>
                 <p className="text-xs text-muted-foreground">
-                  {q.type} • {q.section}
+                  {/* {q.type} • {q.section} */}
+                  • {q.type}
                 </p>
+                <GenerateAnswerButton question={q.question} />
               </div>
             ))}
           </div>
