@@ -83,21 +83,24 @@ export function ExperienceCard({ experience }: Props) {
           </p>
         </DialogHeader>
 
-        <div className="space-y-4">
-          <p>{experience.summary}</p>
+        <div className="space-y-6">
+          <p className="text-justify text-sm text-muted-foreground leading-relaxed">
+            {experience.summary}
+          </p>
 
-          <div className="space-y-2">
-            <h4 className="font-medium">Questions</h4>
+          <div className="space-y-4">
+            <h4 className="font-semibold text-base">Interview Questions</h4>
             {experience.questions.map((q, idx) => (
               <div
                 key={idx}
-                className="rounded-md border p-3 text-sm space-y-1 bg-muted/30"
+                className="rounded-xl border p-4 text-sm bg-muted/30 space-y-2"
               >
-                <p className="font-medium">{q.question}</p>
-                <p className="text-xs text-muted-foreground">
-                  {/* {q.type} • {q.section} */}
-                  • {q.type}
-                </p>
+                <div className="flex flex-col">
+                  <p className="font-medium text-base">{q.question}</p>
+                  <span className="text-xs text-muted-foreground italic">
+                    {q.type}
+                  </span>
+                </div>
                 <GenerateAnswerButton question={q.question} />
               </div>
             ))}
