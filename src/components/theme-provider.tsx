@@ -40,16 +40,6 @@ function GlobalBackground({ theme }: { theme: Theme }) {
     );
   }
   return (
-    // <div
-    //   className="fixed inset-0 -z-10 pointer-events-none"
-    //   style={{
-    //     backgroundImage: "radial-gradient(125% 125% at 50% 90%, #ffffff 40%, #10b981 100%)",
-    //     backgroundSize: "100% 100%",
-    //     backgroundColor: "#fff",
-    //   }}
-    //   aria-hidden
-    // />
-
     <div
   className="fixed inset-0 -z-10 pointer-events-none"
   style={{

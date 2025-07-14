@@ -45,7 +45,7 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
 
     try {
       await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/register`,
+        `${import.meta.env.VITE_AUTH_BASE_URL}/auth/register`,
         {
           name: form.name,
           username: form.username,

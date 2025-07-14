@@ -37,7 +37,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_BASE_URL}/auth/login`,
+        `${import.meta.env.VITE_AUTH_BASE_URL}/auth/login`,
         credentials
       );
 
@@ -54,8 +54,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       );
     }
   };
-
-
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
@@ -65,12 +63,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
             Enter your email below to login to your account
           </CardDescription>
         </CardHeader>
-
         <CardContent>
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-6">
-
-
               <div className="grid gap-3">
                 <Label htmlFor="email">Email</Label>
                 <Input
@@ -119,8 +114,6 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                   </button>
                 </div>
               </div>
-
-
               {errorMsg && (
                 <p className="text-sm text-red-600 text-center">{errorMsg}</p>
               )}
