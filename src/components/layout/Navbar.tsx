@@ -1,8 +1,9 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useTheme } from "@/components/theme-provider";
+// import { useTheme } from "@/components/theme-provider";
 import { useEffect, useState } from "react";
+import { useTheme } from "@/hooks/useTheme";
 
 export function ThemeSwitchButton() {
   const { theme, setTheme } = useTheme();
