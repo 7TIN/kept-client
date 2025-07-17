@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios"; // Import AxiosError
 import { Eye, EyeOff } from "lucide-react";
 import {
   Card,
@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 
 type LoginFormProps = React.ComponentProps<"div">;
 
@@ -19,13 +20,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   className,
   ...props
 }) => {
-
   const [showPassword, setShowPassword] = useState(false);
   const [credentials, setCredentials] = useState({
     email: "",
     password: "",
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -33,7 +34,7 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setErrorMsg(null); 
+    setErrorMsg(null);
 
     try {
       const res = await axios.post(
@@ -44,16 +45,23 @@ export const LoginForm: React.FC<LoginFormProps> = ({
       const { token } = res.data;
 
       localStorage.setItem("token", token);
-      axios.defaults.headers.common.Authorization = `Bearer ${token}`;
 
+      // Redirect to the home page on successful login
+      navigate("/");
 
-      console.log("Login success");
-    } catch (err: any) {
-      setErrorMsg(
-        err.response?.data?.message || "Login failed. Check credentials."
-      );
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        // Now, TypeScript knows that `err` is an AxiosError
+        const serverError = err.response?.data?.message;
+        setErrorMsg(serverError || "Login failed. Please check your credentials.");
+      } else {
+        // Handle non-Axios errors
+        setErrorMsg("An unexpected error occurred. Please try again.");
+        console.error("An unexpected error occurred:", err);
+      }
     }
   };
+
   return (
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>

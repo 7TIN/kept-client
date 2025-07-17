@@ -1,27 +1,23 @@
-// src/lib/api.ts
 import axios from "axios";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
 });
 
-/* ---------- helper: skip Authorization header for public endpoints ---------- */
 function isPublicRequest(url?: string, method?: string) {
   if (!url || !method) return false;
 
   const upperMethod = method.toUpperCase();
 
-  // Allow unauthenticated GET requests
   if (upperMethod === "GET") {
     return (
-      url.startsWith("/experiences") || // e.g., /experiences, /experiences/recent
-      url.startsWith("/companies")     // e.g., /companies?q=...
+      url.startsWith("/experiences") || 
+      url.startsWith("/companies")     
     );
   }
   return false;
 }
 
-/* ---------- interceptor ---------- */
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -31,5 +27,24 @@ api.interceptors.request.use((config) => {
 
   return config;
 });
+
+api.interceptors.response.use(
+  (response) => response, 
+  (error) => {
+
+    if (
+      error.response &&
+      (error.response.status === 401 || error.response.status === 403)
+    ) {
+      localStorage.removeItem("token");
+
+      const loginUrl = new URL('/login', window.location.origin);
+      loginUrl.searchParams.set('message', 'session_expired');
+      window.location.href = loginUrl.toString();
+    }
+    
+    return Promise.reject(error);
+  }
+);
 
 export default api;

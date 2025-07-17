@@ -14,7 +14,7 @@ export function GenerateAnswerButton({ question }: { question: string }) {
       const result = await generateAnswer(question);
       setAnswer(result);
     } catch (err) {
-      setAnswer("❌ Error generating answer.");
+      setAnswer("❌ Error generating answer." + err);
     } finally {
       setLoading(false);
     }
