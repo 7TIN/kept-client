@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios, { AxiosError } from "axios"; // Import AxiosError
+import axios from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import {
   Card,
@@ -12,7 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 type LoginFormProps = React.ComponentProps<"div">;
 
@@ -27,6 +27,13 @@ export const LoginForm: React.FC<LoginFormProps> = ({
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const navigate = useNavigate();
+
+  const [searchParams] = useSearchParams();
+
+  const redirectParam = searchParams.get("redirect");
+  const signupPath = redirectParam
+    ? `/signup?redirect=${encodeURIComponent(redirectParam)}`
+    : "/signup";
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
@@ -46,16 +53,15 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
       localStorage.setItem("token", token);
 
-      // Redirect to the home page on successful login
-      navigate("/");
-
+      const redirectPath = searchParams.get("redirect");
+      navigate(redirectPath || "/");
     } catch (err) {
       if (axios.isAxiosError(err)) {
-        // Now, TypeScript knows that `err` is an AxiosError
         const serverError = err.response?.data?.message;
-        setErrorMsg(serverError || "Login failed. Please check your credentials.");
+        setErrorMsg(
+          serverError || "Login failed. Please check your credentials."
+        );
       } else {
-        // Handle non-Axios errors
         setErrorMsg("An unexpected error occurred. Please try again.");
         console.error("An unexpected error occurred:", err);
       }
@@ -112,7 +118,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
                     className="absolute inset-y-0 right-0 pr-3 flex items-center"
                     onClick={() => setShowPassword((prev) => !prev)}
                     tabIndex={-1}
-                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    aria-label={
+                      showPassword ? "Hide password" : "Show password"
+                    }
                   >
                     {showPassword ? (
                       <EyeOff className="h-4 w-4" />
@@ -133,9 +141,9 @@ export const LoginForm: React.FC<LoginFormProps> = ({
 
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <a href="/signup" className="underline underline-offset-4">
+              <Link to={signupPath} className="underline underline-offset-4">
                 Sign up
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>

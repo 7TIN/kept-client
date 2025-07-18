@@ -18,6 +18,7 @@ function isPublicRequest(url?: string, method?: string) {
   return false;
 }
 
+/* ---------- REQUEST interceptor ---------- */
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
 
@@ -28,18 +29,22 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+/* ---------- RESPONSE interceptor ---------- */
 api.interceptors.response.use(
-  (response) => response, 
+  (response) => response,
   (error) => {
-
     if (
       error.response &&
       (error.response.status === 401 || error.response.status === 403)
     ) {
       localStorage.removeItem("token");
 
+      const redirectUrl = window.location.pathname + window.location.search;
+
       const loginUrl = new URL('/login', window.location.origin);
       loginUrl.searchParams.set('message', 'session_expired');
+      loginUrl.searchParams.set('redirect', redirectUrl);
+
       window.location.href = loginUrl.toString();
     }
     

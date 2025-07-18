@@ -1,5 +1,5 @@
-// src/lib/aiClient.ts
 import api from "@/lib/api";
+import { isAxiosError } from "axios"; 
 
 export async function generateAnswer(question: string): Promise<string> {
   try {
@@ -7,8 +7,14 @@ export async function generateAnswer(question: string): Promise<string> {
 
     const answer = response.data?.answer;
     return answer ?? "No answer generated.";
-  } catch (err: any) {
-    const message = err.response?.data?.error ?? "Failed to generate answer";
+  } catch (err) { 
+    let message = "Failed to generate answer";
+    
+    if (isAxiosError(err)) {
+      
+      message = err.response?.data?.error || message;
+    }
+    
     throw new Error(message);
   }
 }

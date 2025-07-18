@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { Eye, EyeOff } from "lucide-react";
 import {
   Card,
@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 type SignUpProps = React.ComponentProps<"div">;
 
@@ -28,6 +29,8 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
   });
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
   /* ---------------- handlers ---------------- */
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -53,13 +56,27 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
           password: form.password,
         }
       );
-      setSuccess(true);       
-    } catch (err: any) {
-      setErrorMsg(
-        err.response?.data?.message || "Registration failed. Try again."
-      );
+      setSuccess(true);
+      const redirectParam = searchParams.get('redirect');
+
+      let loginPath = "/login?message=signup_success";
+
+      if (redirectParam) {
+        loginPath += `&redirect=${encodeURIComponent(redirectParam)}`;
+      }
+      
+      navigate(loginPath);
+
+    } catch (err) {
+      if (isAxiosError(err)) {
+        setErrorMsg(err.response?.data?.message || "Registration failed. Try again.");
+      } else {
+        setErrorMsg("An unexpected error occurred.");
+      }
     }
   };
+
+  
 
   return (
     <div className={cn("w-full max-w-md mx-auto", className)} {...props}>
@@ -182,9 +199,9 @@ export const SignUp: React.FC<SignUpProps> = ({ className, ...props }) => {
 
             <div className="mt-2 text-sm text-muted-foreground text-center">
               Already have an account?{" "}
-              <a href="/login" className="font-medium underline">
+              <Link to="/login" className="font-medium underline">
                 Log in
-              </a>
+              </Link>
             </div>
           </form>
         </CardContent>
