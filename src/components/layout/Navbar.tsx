@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 // import { useTheme } from "@/components/theme-provider";
 import { useEffect, useState } from "react";
 import { useTheme } from "@/hooks/useTheme";
+import { MobileNav } from "./MobileNav";
 
 export function ThemeSwitchButton() {
   const { theme, setTheme } = useTheme();
@@ -47,10 +48,16 @@ export function Navbar() {
             "flex items-center justify-between h-16 px-6 pointer-events-auto"
         )}
       >
+        
+        <MobileNav />
+
         {/* Logo / App Name */}
+
+
         <Link to="/" className="text-lg font-bold tracking-tight">
           Kept
         </Link>
+        
 
         {/* Navigation Links */}
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium text-muted-foreground">

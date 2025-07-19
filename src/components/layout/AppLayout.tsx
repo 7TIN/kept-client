@@ -6,7 +6,7 @@ export default function AppLayout() {
   return (
     <div>
       <Navbar />
-      <div className="relative z-10">
+      <div className="">
         <Outlet />
       </div>
     </div>
