@@ -50,7 +50,7 @@ export function MobileNav() {
         <div
           className={cn(
             "absolute top-12 left-0 w-72 rounded-xl border border-white/10 p-6 shadow-xl",
-            "bg-black/30 backdrop-blur-lg text-white",
+            "bg-black/70 backdrop-blur-md text-white",
             "flex flex-col gap-4 animate-in slide-in-from-left duration-300"
           )}
         >

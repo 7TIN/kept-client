@@ -1,6 +1,8 @@
 import { LoginForm } from "@/components/login-form";
+import { Button } from "@/components/ui/button";
+import { Home } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 
 const errorMessages: { [key: string]: string } = {
   session_expired: "Your session has expired. Please log in again to continue.",
@@ -21,6 +23,14 @@ export default function Login() {
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
+
+      <Link to="/" className="absolute top-6 left-6">
+        <Button variant="ghost" size="icon" aria-label="Go to home page">
+          <Home className="h-5 w-5" />
+        </Button>
+      </Link>
+
+
       <div className="w-full max-w-sm space-y-4">
         {authMessage && (
           <div
