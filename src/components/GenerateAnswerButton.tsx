@@ -2,14 +2,23 @@ import { useState } from "react";
 import { generateAnswer } from "@/lib/aiClient";
 import { Button } from "@/components/ui/button";
 import { Sparkles } from "lucide-react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function GenerateAnswerButton({ question }: { question: string }) {
   const [loading, setLoading] = useState(false);
   const [answer, setAnswer] = useState("");
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClick = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      const redirectUrl = location.pathname + location.search;
+      navigate(`/login?message=login_required&redirect=${encodeURIComponent(redirectUrl)}`);
+      return;
+    }
     setLoading(true);
-    setAnswer(""); // Clear any previous answer
+    setAnswer("");
     try {
       const result = await generateAnswer(question);
       setAnswer(result);

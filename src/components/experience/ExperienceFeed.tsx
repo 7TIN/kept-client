@@ -38,7 +38,7 @@ export default function ExperienceFeed({ filters }: Props) {
           ← Prev
         </button>
         <span>
-          Page {data.number + 1} / {data.totalPages}
+          Page{data.number + 1}/{data.totalPages}
         </span>
         <button
           disabled={page + 1 >= data.totalPages}

@@ -2,9 +2,13 @@ import { useMemo, useState, useEffect } from "react";
 import debounce from "debounce";
 import { ShareExperienceDialog } from "@/components/experience/ShareExperienceDialog";
 import ExperienceFeed from "@/components/experience/ExperienceFeed";
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 export default function ExperiencesPage() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
   const [search, setSearch] = useState(""); // Track current input
   const [debouncedSearch, setDebouncedSearch] = useState(""); // Track debounced input
   const [position, setPosition] = useState("");
@@ -25,11 +29,25 @@ export default function ExperiencesPage() {
 
   const companyName = searchParams.get("company") ?? "";
 
+  const handleAddExperienceClick = () => {
+
+    const token = localStorage.getItem("token");
+
+    if (token) {
+
+      setIsDialogOpen(true);
+    } else {
+
+      const redirectUrl = location.pathname + location.search;
+      navigate(`/login?message=login_required&redirect=${encodeURIComponent(redirectUrl)}`);
+    }
+  };
+
   return (
     <div className="max-w-5xl mx-auto px-4 py-8 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-xl font-semibold">Interview Experiences</h1>
-        <ShareExperienceDialog />
+        <Button onClick={handleAddExperienceClick}>Add Experience</Button>
       </div>
 
       <div className="flex gap-4 flex-wrap items-center">
@@ -78,6 +96,8 @@ export default function ExperiencesPage() {
 
       {/* Only update ExperienceFeed when debouncedSearch changes */}
       <ExperienceFeed filters={{ q: debouncedSearch, position, type, company: companyName }} />
+
+      <ShareExperienceDialog open={isDialogOpen} onOpenChange={setIsDialogOpen} />
     </div>
   );
 }

@@ -4,7 +4,8 @@ import { useSearchParams } from "react-router-dom";
 
 const errorMessages: { [key: string]: string } = {
   session_expired: "Your session has expired. Please log in again to continue.",
-  logged_out: "You have been logged out successfully.",
+  signup_success: "Registration successful! Please log in to continue.",
+  login_required: "Please log in to perform this action.",
 };
 export default function Login() {
 

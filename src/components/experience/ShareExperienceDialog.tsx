@@ -8,7 +8,6 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import {
   Form,
@@ -120,7 +119,7 @@ function CompanyCombobox({
               className="w-full justify-start text-primary"
               onClick={() => onChange(query)}
             >
-              + Create “{query}”
+              +Create “{query}”
             </Button>
           )}
       </PopoverContent>
@@ -128,7 +127,14 @@ function CompanyCombobox({
   );
 }
 
-export function ShareExperienceDialog() {
+interface ShareExperienceDialogProps {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+}
+
+const FORM_STATE_KEY = 'shareExperienceForm';
+
+export function ShareExperienceDialog({ open, onOpenChange }: ShareExperienceDialogProps) {
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -147,7 +153,21 @@ export function ShareExperienceDialog() {
     name: "questions",
   });
 
+  useEffect(() => {
+    if (open) {
+      const savedStateJSON = sessionStorage.getItem(FORM_STATE_KEY);
+      if (savedStateJSON) {
+        const savedState = JSON.parse(savedStateJSON);
+        if (savedState.interviewDate) {
+          savedState.interviewDate = new Date(savedState.interviewDate);
+        }
+        form.reset(savedState);
+      }
+    }
+  }, [open, form]);
+
   async function onSubmit(values: FormValues) {
+    sessionStorage.setItem(FORM_STATE_KEY, JSON.stringify(values));
     try {
       const searchRes = await api.get<Company[]>("/companies", {
         params: { q: values.companyName.trim() },
@@ -176,16 +196,20 @@ export function ShareExperienceDialog() {
       };
 
       await api.post("/experiences", payload);
+
+      sessionStorage.removeItem(FORM_STATE_KEY);
+      onOpenChange(false);
+
     } catch (err) {
       console.error("Failed to submit experience:", err);
     }
   }
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      {/* <DialogTrigger asChild>
         <Button>Add Experience</Button>
-      </DialogTrigger>
+      </DialogTrigger> */}
       <DialogContent className="max-w-2xl w-[90vw] p-6 sm:p-8">
         <div className="max-h-[80vh] overflow-y-auto no-scrollbar space-y-6">
           <DialogHeader>

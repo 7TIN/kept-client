@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import {Route, Routes, useNavigate } from "react-router-dom";
 
 import { ThemeProvider } from "./components/theme-provider";
 
@@ -10,9 +10,27 @@ import Signup from "./pages/signup";
 import AuthLayout from "./components/layout/AuthLayout";
 import AppLayout from "./components/layout/AppLayout";
 import CompaniesPage from "./pages/CompaniesPage";
+import { useEffect } from "react";
+import eventBus from "./lib/event-bus";
 // import CompaniesPage from "./components/company/CompanySortBar";
 
 export default function App() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleUnauthorized = () => {
+      const redirectUrl = window.location.pathname + window.location.search;
+      const destination = `/login?message=session_expired&redirect=${encodeURIComponent(redirectUrl)}`;
+      navigate(destination);
+    };
+
+    eventBus.addEventListener('unauthorized', handleUnauthorized);
+
+    return () => {
+      eventBus.removeEventListener('unauthorized', handleUnauthorized);
+    };
+  }, [navigate]);
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <Routes>

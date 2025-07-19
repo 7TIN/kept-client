@@ -1,4 +1,5 @@
 import axios from "axios";
+import eventBus from "./event-bus";
 
 const api = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
@@ -39,13 +40,8 @@ api.interceptors.response.use(
     ) {
       localStorage.removeItem("token");
 
-      const redirectUrl = window.location.pathname + window.location.search;
+      eventBus.dispatchEvent(new CustomEvent('unauthorized'));
 
-      const loginUrl = new URL('/login', window.location.origin);
-      loginUrl.searchParams.set('message', 'session_expired');
-      loginUrl.searchParams.set('redirect', redirectUrl);
-
-      window.location.href = loginUrl.toString();
     }
     
     return Promise.reject(error);
